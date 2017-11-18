@@ -276,7 +276,7 @@ local state_collector = {
 	['000000000'] = function (self) play_animation(self, anim_idle) end,
 	['100000000'] = function (self) play_animation(self, anim_idle) end,
 	['010000000'] = function (self) 
-		print(1111)
+		print(11111)
 		play_animation(self, anim_run)
 	end,
 	default = function (self) play_animation(self, anim_idle) end

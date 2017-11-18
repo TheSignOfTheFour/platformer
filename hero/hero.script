@@ -102,7 +102,14 @@ local function update_animations(self)
 				play_animation(self, anim_jump)
 			end
 		else
-			play_animation(self, anim_fall)
+            if (first_jump_animation) then
+                first_jump_animation = false
+                first_fall_animation = true
+            elseif double_jump_animation then
+                double_jump_animation = false
+                double_fall_animation = true
+            end
+            play_animation(self, anim_fall)
 		end
 	end
 	if acceleration_animation then
@@ -180,6 +187,10 @@ local function handle_geometry_contact(self, normal, distance)
 	-- (0.7 is roughly equal to 45 degrees deviation from pure vertical direction)
 	if normal.y > 0.7 then
 		self.ground_contact = true
+        first_jump_animation = false
+        first_fall_animation = false
+        double_jump_animation = false
+        double_fall_animation = false
 	end
 	-- project the velocity onto the normal
 	proj = vmath.dot(self.velocity, normal)
@@ -196,7 +207,7 @@ function on_message(self, message_id, message, sender)
 		-- check that the object is something we consider geometry
 		if message.group == group_geometry then
 			handle_geometry_contact(self, message.normal, message.distance)
-		end
+        end
 	end
 end
 
@@ -248,42 +259,24 @@ function on_input(self, action_id, action)
 					acceleration_animation = false
 				end)
 			end
-		elseif action_id == input_jump and action.pressed then
-			if not double_jump_animation then
-				if first_jump_animation or first_fall_animation then
--- 					if (first_jump_animation) then
--- 						msg.post("#sprite", "cancel_animation", {id = anim_jump})
--- 					else
--- 						msg.post("#sprite", "cancel_animation", {id = anim_fall})
--- 					end
-					first_fall_animation = false
-					first_jump_animation = false
-					double_jump_animation = true
-					-- TODO run doublejump
-					double_jump(self)
-					timer.seconds(0.3, function(self, id)
-						double_jump_animation = false
-						first_fall_animation = true
-						abort_jump(self)
-						timer.seconds(0.3, function(self, id)
-							first_fall_animation = false
-						end)
-					end)
-				else
-					first_jump_animation = true
-					jump(self)
-					timer.seconds(0.3, function(self, id)
-						abort_jump(self)
-						first_jump_animation = false
-						first_fall_animation = true
-						timer.seconds(0.3, function(self, id)
--- 							abort_jump(self)
-							first_fall_animation = false
-						end)
-					end)
-				end
-			end
---		elseif action_id == input_touch then
+		elseif action_id == input_jump then
+            if action.pressed then
+                if not double_jump_animation and not double_fall_animation then
+                    if first_jump_animation or first_fall_animation then
+                        first_jump_animation = false
+                        first_fall_animation = false
+                        double_jump_animation = true
+                        -- TODO run doublejump
+                        double_jump(self)
+                    else
+                        first_jump_animation = true
+                        jump(self)
+                    end
+                end
+            elseif action.released then
+                abort_jump(self)
+            end
+            --		elseif action_id == input_touch then
 --			-- move towards the touch-point
 --			local diff = action.x - go.get_position().x
 --			-- update direction

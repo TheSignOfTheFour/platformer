@@ -1,6 +1,6 @@
 components {
   id: "script"
-  component: "/hero/hero_copy.script"
+  component: "/hero/hero.script"
   position {
     x: 0.0
     y: 0.0

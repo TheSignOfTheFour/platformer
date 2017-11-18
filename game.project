@@ -1,5 +1,6 @@
 [project]
 title = platformer
+dependencies = https://github.com/britzl/defold-timer/archive/master.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc

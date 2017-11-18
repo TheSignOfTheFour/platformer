@@ -347,6 +347,89 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "acceler"
+  images {
+    image: "/hero/images/fire-1.png"
+  }
+  images {
+    image: "/hero/images/fire-2.png"
+  }
+  images {
+    image: "/hero/images/fire-3.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "double_jump"
+  images {
+    image: "/hero/images/hero-jump_right_0.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_1.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_2.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_3.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_4.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_5.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_6.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_7.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_8.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_9.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_10.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_11.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_12.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_13.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_14.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_15.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_16.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_17.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_18.png"
+  }
+  images {
+    image: "/hero/images/hero-jump_right_19.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 0
 extrude_borders: 4
 inner_padding: 0

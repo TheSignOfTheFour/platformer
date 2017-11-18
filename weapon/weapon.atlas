@@ -1,0 +1,9 @@
+images {
+  image: "/weapon/images/sword.png"
+}
+images {
+  image: "/weapon/images/sword2.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

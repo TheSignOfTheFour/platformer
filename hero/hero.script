@@ -24,13 +24,13 @@ local acceleration_animation = false
 
 -- pre-hashing ids improves performance
 local msg_contact_point_response = hash("contact_point_response")
-local msg_animation_done = hash("animation_done")
+--local msg_animation_done = hash("animation_done")
 local group_geometry = hash("geometry")
 local input_left = hash("left")
 local input_right = hash("right")
 local input_lshift = hash("acceleration")
 local input_jump = hash("jump")
-local input_touch = hash("touch")
+--local input_touch = hash("touch")
 local anim_run = hash("run")
 local anim_idle = hash("idle")
 local anim_jump = hash("jump")

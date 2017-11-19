@@ -1,0 +1,56 @@
+--go.property("hero_weapon", false)
+--go.property("level_weapon", false)
+go.property("deff_x", 0) -- diff for character weapn
+go.property("deff_y", 0) -- diff for character weapn
+go.property("weapon_id", hash("sword"))
+
+local function disable_all_sprites()
+	msg.post("#sword", "disable")
+	msg.post("#sword2", "disable")
+end
+
+local function init_weapon(self)
+	self.weapon_stats = {
+		[hash("sword")] = { damage = 10, range = 30, firerate = 3, fire_anim="pistol_fire", url = msg.url("#sword") },
+		[hash("sword2")] = { damage = 50, range = 15, firerate = 1,  fire_anim="shotgun_fire", url = msg.url("#sword2") },
+	}
+end
+
+function init(self)
+	init_weapon(self)
+	disable_all_sprites()
+	msg.post(self.weapon_stats[self.weapon_id].url, "enable")
+--	go.set_position(vmath.vector3(100, 100, 0))
+	-- Add initialization code here
+	-- Remove this function if not needed
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+--	if message_id == hash("hero_position") then
+--		print(3333, message.position)
+-- 		go.set_position(message.position)
+------ 		msg.post("weapon#script", "hero_position", {position = go.get_position()})
+--	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

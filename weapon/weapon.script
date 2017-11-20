@@ -1,6 +1,6 @@
 --go.property("hero_weapon", false)
 --go.property("level_weapon", false)
-go.property("deff_position", vmath.vector3(0, 0, 0)) -- diff for character weapn
+go.property("diff_position", vmath.vector3(0, 0, 0)) -- diff for character weapn
 --go.property("deff_y", 0) -- diff for character weapn
 go.property("weapon_id", hash("sword"))
 
@@ -39,9 +39,18 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Remove this function if not needed
 	if message_id == hash("hero_position") then
- 		go.set_position(message.position + self.deff_position)
+ 		go.set_position(message.position + self.diff_position)
 ---- 		msg.post("weapon#script", "hero_position", {position = go.get_position()})
 	elseif message_id == hash("change_direction") then
+		print(44444, message.new_direction, self.diff_position.x)
+		local diff_property = go.get(msg.url(), "diff_position")
+		if message.new_direction < 0 then
+			diff_property.x = math.abs(diff_property.x)
+		else
+			diff_property.x = -1 * math.abs(diff_property.x)
+		end
+
+		go.set(msg.url(), "diff_position", diff_property)
 		sprite.set_hflip(self.weapon_stats[self.weapon_id].url, message.new_direction < 0)
 	end
 end

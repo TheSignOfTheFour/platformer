@@ -1,7 +1,7 @@
 --go.property("hero_weapon", false)
 --go.property("level_weapon", false)
-go.property("deff_x", 0) -- diff for character weapn
-go.property("deff_y", 0) -- diff for character weapn
+--go.property("deff_x", 0) -- diff for character weapn
+--go.property("deff_y", 0) -- diff for character weapn
 go.property("weapon_id", hash("sword"))
 
 local function disable_all_sprites()

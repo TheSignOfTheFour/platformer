@@ -54,10 +54,10 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spinemodel"
+  id: "sword2spinemodel"
   type: "spinemodel"
-  data: "spine_scene: \"/weapon/weapon.spinescene\"\n"
-  "default_animation: \"animtion0\"\n"
+  data: "spine_scene: \"/weapon/sword2.spinescene\"\n"
+  "default_animation: \"idle\"\n"
   "skin: \"\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   "material: \"/builtins/materials/spine.material\"\n"
@@ -65,7 +65,49 @@ embedded_components {
   position {
     x: 0.0
     y: 0.0
+    z: 0.091
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
     z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "swordspinemodel"
+  type: "spinemodel"
+  data: "spine_scene: \"/weapon/sword.spinescene\"\n"
+  "default_animation: \"idle\"\n"
+  "skin: \"\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  "material: \"/builtins/materials/spine.material\"\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.091
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "axespinemodel"
+  type: "spinemodel"
+  data: "spine_scene: \"/weapon/axe.spinescene\"\n"
+  "default_animation: \"idle\"\n"
+  "skin: \"\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  "material: \"/builtins/materials/spine.material\"\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.091
   }
   rotation {
     x: 0.0

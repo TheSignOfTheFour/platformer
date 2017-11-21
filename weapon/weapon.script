@@ -7,19 +7,26 @@ go.property("weapon_id", hash("sword"))
 local function disable_all_sprites()
 	msg.post("#sword", "disable")
 	msg.post("#sword2", "disable")
+	msg.post("#axespinemodel", "disable")
+	msg.post("#swordspinemodel", "disable")
+	msg.post("#sword2spinemodel", "disable")
 end
 
 local function init_weapon(self)
 	self.weapon_stats = {
-		[hash("sword")] = { damage = 10, range = 30, firerate = 3, fire_anim="pistol_fire", url = msg.url("#sword") },
-		[hash("sword2")] = { damage = 50, range = 15, firerate = 1,  fire_anim="shotgun_fire", url = msg.url("#sword2") },
+		[hash("axe")] = { damage = 10, range = 30, firerate = 3, fire_anim="pistol_fire", url = msg.url("#axespinemodel") },
+		[hash("sword")] = { damage = 10, range = 30, firerate = 3, fire_anim="pistol_fire", url = msg.url("#swordspinemodel") },
+		[hash("sword2")] = { damage = 50, range = 15, firerate = 1,  fire_anim="shotgun_fire", url = msg.url("#sword2spinemodel") },
 	}
 end
 
 function init(self)
 	init_weapon(self)
 	disable_all_sprites()
-	msg.post(self.weapon_stats[self.weapon_id].url, "enable")
+--	msg.post(self.weapon_stats[self.weapon_id].url, "enable")
+	msg.post("#axespinemodel", "enable")
+--	msg.post(msg.url("#spinemodel"), "skin", hash("axe"))
+--	go.set(msg.url("#spinemodel"), "skin", hash("axe"))
 --	go.set_position(vmath.vector3(100, 100, 0))
 	-- Add initialization code here
 	-- Remove this function if not needed
@@ -45,13 +52,20 @@ function on_message(self, message_id, message, sender)
 		print(44444, message.new_direction, self.diff_position.x)
 		local diff_property = go.get(msg.url(), "diff_position")
 		if message.new_direction < 0 then
+			--			go.set_rotation(vmath.quat_rotation_y(3.141592653), "#spinemodel")
+			local rotatio = vmath.quat_rotation_y(3.141592653);
+--			rotatio = vmath.quat_rotation_z(3.141592653);
+			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
 			diff_property.x = math.abs(diff_property.x)
 		else
+			local rotatio = vmath.quat_rotation_y(0);
+--			rotatio = vmath.quat_rotation_z(0);
+			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
 			diff_property.x = -1 * math.abs(diff_property.x)
 		end
 
 		go.set(msg.url(), "diff_position", diff_property)
-		sprite.set_hflip(self.weapon_stats[self.weapon_id].url, message.new_direction < 0)
+--		sprite.set_hflip(self.weapon_stats[self.weapon_id].url, message.new_direction < 0) -- doesn't work for spine animation
 	end
 end
 

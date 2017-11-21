@@ -1,0 +1,5 @@
+spine_scene: "/weapon/sword2.spinescene"
+default_animation: "idle"
+skin: ""
+blend_mode: BLEND_MODE_ALPHA
+material: "/builtins/materials/spine.material"

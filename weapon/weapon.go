@@ -53,3 +53,24 @@ embedded_components {
     w: 1.0
   }
 }
+embedded_components {
+  id: "spinemodel"
+  type: "spinemodel"
+  data: "spine_scene: \"/weapon/weapon.spinescene\"\n"
+  "default_animation: \"animtion0\"\n"
+  "skin: \"\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  "material: \"/builtins/materials/spine.material\"\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}

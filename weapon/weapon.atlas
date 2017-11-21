@@ -4,6 +4,9 @@ images {
 images {
   image: "/weapon/images/sword2.png"
 }
+images {
+  image: "/weapon/images/axe.png"
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

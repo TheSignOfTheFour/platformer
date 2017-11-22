@@ -48,7 +48,7 @@ function init(self)
 	local props = {
 --		hero_weapon = true,
 		diff_position = vmath.vector3((go.get("#sprite", "size.x") / 2) * 0.7, go.get("#sprite", "size.y") / 2, 0),
-		weapon_id = hash("sword2")
+		weapon_id = hash("axe")
 	}
 
 	self.weapon = factory.create("#weaponfactory", go.get_position(), rotation, props, scale)

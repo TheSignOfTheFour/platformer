@@ -1,9 +1,4 @@
---local WEAPON_Z_POSITION = 0.09099999815225601
-local WEAPON_Z_POSITION = 0.09099999815225601
---go.property("hero_weapon", false)
---go.property("level_weapon", false)
 go.property("diff_position", vmath.vector3(0, 0, 0)) -- diff for character weapn
---go.property("deff_y", 0) -- diff for character weapn
 go.property("weapon_id", hash("sword"))
 
 local function disable_all_sprites()
@@ -26,12 +21,7 @@ function init(self)
 	self.hit_animation = false
 	init_weapon(self)
 	disable_all_sprites()
---	local pos = go.get_position()
---	go.set_position(vmath.vector3(pos.x, pos.y, WEAPON_Z_POSITION))
 	msg.post(self.weapon_stats[self.weapon_id].url, "enable")
---	msg.post(msg.url("#spinemodel"), "skin", hash("axe"))
---	go.set(msg.url("#spinemodel"), "skin", hash("axe"))
---	go.set_position(vmath.vector3(100, 100, 0))
 	-- Add initialization code here
 	-- Remove this function if not needed
 end
@@ -46,6 +36,14 @@ function update(self, dt)
 	-- Remove this function if not needed
 end
 
+local function anim_idle(self)
+	if self.anim_disheveled then
+		spine.play_anim(self.weapon_stats[self.weapon_id].url, "disheveled", go.PLAYBACK_LOOP_FORWARD)
+	else
+		spine.play_anim(self.weapon_stats[self.weapon_id].url, "idle", go.PLAYBACK_LOOP_FORWARD)
+	end
+end
+
 local function change_direction(self)
 	local rotation = go.get_rotation(self.weapon_stats[self.weapon_id].url)
 	local new_direction = 1
@@ -56,7 +54,7 @@ local function change_direction(self)
 end
 
 local function anim_hit_done(self)
-	spine.play_anim(self.weapon_stats[self.weapon_id].url, "idle", go.PLAYBACK_LOOP_FORWARD)
+	anim_idle(self)
 	self.hit_animation = false
 	change_direction(self)
 end
@@ -68,7 +66,6 @@ function on_message(self, message_id, message, sender)
  		go.set_position(message.position + self.diff_position)
 	elseif message_id == hash("change_direction") then
 		local diff_property = go.get(msg.url(), "diff_position")
-		print(66666, message, message.new_direction)
 		if message.new_direction < 0 then
 			local rotatio = vmath.quat_rotation_y(3.141592653);
 			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
@@ -78,7 +75,6 @@ function on_message(self, message_id, message, sender)
 			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
 			diff_property.x = -1 * math.abs(diff_property.x)
 		end
-
 		go.set(msg.url(), "diff_position", diff_property)
 	elseif message_id == hash("acceleration") then
 		change_direction(self)
@@ -86,10 +82,11 @@ function on_message(self, message_id, message, sender)
 			spine.play_anim(self.weapon_stats[self.weapon_id].url, "acceleration", go.PLAYBACK_NONE)
 			spine.play_anim(self.weapon_stats[self.weapon_id].url, "acceleration", go.PLAYBACK_LOOP_FORWARD)
 		else
-			spine.play_anim(self.weapon_stats[self.weapon_id].url, "idle", go.PLAYBACK_LOOP_FORWARD)
+			anim_idle(self)
 		end
 	elseif message_id == hash("hit") then
 		if self.hit_animation == false then
+			self.anim_disheveled = true
 			change_direction(self)
 			self.hit_animation = true
 			spine.play_anim(self.weapon_stats[self.weapon_id].url, "hit", go.PLAYBACK_NONE)

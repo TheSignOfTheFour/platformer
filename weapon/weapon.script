@@ -23,6 +23,7 @@ local function init_weapon(self)
 end
 
 function init(self)
+	self.hit_animation = false
 	init_weapon(self)
 	disable_all_sprites()
 --	local pos = go.get_position()
@@ -45,51 +46,55 @@ function update(self, dt)
 	-- Remove this function if not needed
 end
 
+local function change_direction(self)
+	local rotation = go.get_rotation(self.weapon_stats[self.weapon_id].url)
+	local new_direction = 1
+	if rotation.y == 0 then
+		new_direction = -1
+	end
+	msg.post(msg.url(), "change_direction", {new_direction = new_direction})
+end
+
+local function anim_hit_done(self)
+	spine.play_anim(self.weapon_stats[self.weapon_id].url, "idle", go.PLAYBACK_LOOP_FORWARD)
+	self.hit_animation = false
+	change_direction(self)
+end
+
 function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Remove this function if not needed
 	if message_id == hash("hero_position") then
---		local pos = go.get_position()
---		local posz = pos.z
---		pos = message.position + self.diff_position
  		go.set_position(message.position + self.diff_position)
--- 		go.set_position(vmath.vector3(pos.x, pos.y, posz))
----- 		msg.post("weapon#script", "hero_position", {position = go.get_position()})
 	elseif message_id == hash("change_direction") then
 		local diff_property = go.get(msg.url(), "diff_position")
+		print(66666, message, message.new_direction)
 		if message.new_direction < 0 then
 			local rotatio = vmath.quat_rotation_y(3.141592653);
 			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
---			go.set_rotation(rotatio, msg.url())
-
 			diff_property.x = math.abs(diff_property.x)
-
---			local pos = go.get_position(self.weapon_stats[self.weapon_id].url)
---			print(5555, pos.z, self.weapon_stats[self.weapon_id].url)
---			go.set_position(vmath.vector3(pos.x, pos.y, WEAPON_Z_POSITION), self.weapon_stats[self.weapon_id].url)
-
---			local pos = go.get_position(msg.url())
---			print(5555, pos.z)
---			go.set_position(vmath.vector3(pos.x, pos.y, WEAPON_Z_POSITION), msg.url())
 		else
 			local rotatio = vmath.quat_rotation_y(0);
---			rotatio = vmath.quat_rotation_z(0);
 			go.set_rotation(rotatio, self.weapon_stats[self.weapon_id].url)
---			go.set_rotation(rotatio, msg.url())
-
 			diff_property.x = -1 * math.abs(diff_property.x)
-
---			local pos = go.get_position(self.weapon_stats[self.weapon_id].url)
---			print(44444, pos.z)
---			go.set_position(vmath.vector3(pos.x, pos.y, WEAPON_Z_POSITION), self.weapon_stats[self.weapon_id].url)
-
---			local pos = go.get_position(msg.url())
---			print(44444, pos.z)
---			go.set_position(vmath.vector3(pos.x, pos.y, WEAPON_Z_POSITION), msg.url())
 		end
 
 		go.set(msg.url(), "diff_position", diff_property)
---		sprite.set_hflip(self.weapon_stats[self.weapon_id].url, message.new_direction < 0) -- doesn't work for spine animation
+	elseif message_id == hash("acceleration") then
+		change_direction(self)
+		if message.start == true then
+			spine.play_anim(self.weapon_stats[self.weapon_id].url, "acceleration", go.PLAYBACK_NONE)
+			spine.play_anim(self.weapon_stats[self.weapon_id].url, "acceleration", go.PLAYBACK_LOOP_FORWARD)
+		else
+			spine.play_anim(self.weapon_stats[self.weapon_id].url, "idle", go.PLAYBACK_LOOP_FORWARD)
+		end
+	elseif message_id == hash("hit") then
+		if self.hit_animation == false then
+			change_direction(self)
+			self.hit_animation = true
+			spine.play_anim(self.weapon_stats[self.weapon_id].url, "hit", go.PLAYBACK_NONE)
+			spine.play_anim(self.weapon_stats[self.weapon_id].url, "hit", go.PLAYBACK_ONCE_FORWARD, {}, anim_hit_done)
+		end
 	end
 end
 

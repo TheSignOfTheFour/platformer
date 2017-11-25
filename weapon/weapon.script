@@ -26,7 +26,7 @@ function init(self)
 	self.idle_animation = true
 	self.disheveled_animation = false
 	self.running_animation = false
-	self.jump_animation = false
+	self.jump_animation = true
 	self.acceleration_animation = false
 	self.timer = nil
 	init_weapon(self)
@@ -119,6 +119,7 @@ function on_message(self, message_id, message, sender)
 			spine.play_anim(self.weapon_stats[self.weapon_id].url, "acceleration", go.PLAYBACK_LOOP_FORWARD)
 		else
 			self.acceleration_animation = false
+			self.running_animation = false -- I'm not sure about that, but it works.
 			if self.jump_animation == true then
 				anim_jump(self)
 			else
@@ -153,16 +154,17 @@ function on_message(self, message_id, message, sender)
 		change_rotation(self)
 	elseif message_id == hash("running") then
 		if not self.hit_animation then
-
-		if message.start == true then
-			self.idle_animation = false
-			self.running_animation = true
-			spine.play_anim(self.weapon_stats[self.weapon_id].url, "disheveled", go.PLAYBACK_LOOP_FORWARD) -- jump animation
-		else
-			self.running_animation = false
-			anim_idle(self)
-		end
-		change_rotation(self)
+			if message.start == true then
+				if not self.running_animation then
+					self.idle_animation = false
+					self.running_animation = true
+					spine.play_anim(self.weapon_stats[self.weapon_id].url, "disheveled", go.PLAYBACK_LOOP_FORWARD) -- jump animation
+				end
+			else
+				self.running_animation = false
+				anim_idle(self)
+			end
+			change_rotation(self)
 		end
 	end
 end

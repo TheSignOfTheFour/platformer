@@ -23,6 +23,7 @@ embedded_components {
   "restitution: 0.5\n"
   "group: \"hero\"\n"
   "mask: \"geometry\"\n"
+  "mask: \"bestiary\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -69,7 +70,7 @@ embedded_components {
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {
-    x: 0.0
+    x: 1.0
     y: 30.809103
     z: 0.1
   }

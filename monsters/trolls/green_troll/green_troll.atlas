@@ -1,0 +1,59 @@
+animations {
+  id: "idle"
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_000.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_001.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_002.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_003.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_004.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_005.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/IDLE_006.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 15
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "attack"
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_000.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_001.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_002.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_003.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_004.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_005.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/ATTAK_006.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 18
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

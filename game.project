@@ -16,6 +16,8 @@ height = 768
 [physics]
 scale = 0.02
 debug = 0
+gravity_y = -1100.0
+gravity_x = 0.0
 
 [graphics]
 default_texture_min_filter = linear

@@ -1,21 +1,8 @@
 function init(self)
--- 		factory.create("#weaponfactory", go.get_position() + vmath.rotate(rotation, vmath.vector3(10, 40, 0)), rotation)
-	local rotation = vmath.quat_rotation_z(math.pi)
-	local scale = 1
-	local props = {
---		level_weapon = true,
-		weapon_id = hash("sword")
-	}
-
---	local troll_rotation = vmath.quat_rotation_z(0)
-	--	go.set_position(vmath.vector3(100, 100, 0))
-
-	factory.create("#weaponlevelfactory", vmath.vector3(100, 100, 0), rotation, props, scale)
-
-	factory.create("#green_troll_factory", vmath.vector3(600, 150, 0), nil, {}, scale)
-
 	-- Add initialization code here
 	-- Remove this function if not needed
+    self.direction = 1
+    self.previous_direction = nil
 end
 
 function final(self)
@@ -23,9 +10,18 @@ function final(self)
 	-- Remove this function if not needed
 end
 
+local function update_animations(self)
+    if self.previous_direction ~= self.direction then
+        sprite.set_hflip("#sprite", self.direction < 0)
+        self.previous_direction = self.direction
+    end
+end
+
 function update(self, dt)
 	-- Add update code here
 	-- Remove this function if not needed
+
+    update_animations(self)
 end
 
 function on_message(self, message_id, message, sender)

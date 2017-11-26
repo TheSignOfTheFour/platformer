@@ -49,3 +49,21 @@ embedded_components {
     w: 1.0
   }
 }
+embedded_components {
+  id: "green_troll_factory"
+  type: "factory"
+  data: "prototype: \"/monsters/trolls/green_troll/green_troll.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}

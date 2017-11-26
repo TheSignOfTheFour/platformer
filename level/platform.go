@@ -8,6 +8,7 @@ embedded_components {
   "restitution: 0.5\n"
   "group: \"geometry\"\n"
   "mask: \"hero\"\n"
+  "mask: \"bestiary\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

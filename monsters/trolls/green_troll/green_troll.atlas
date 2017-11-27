@@ -49,8 +49,36 @@ animations {
   images {
     image: "/monsters/trolls/green_troll/images/ATTAK_006.png"
   }
-  playback: PLAYBACK_ONCE_FORWARD
-  fps: 18
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 15
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "walk"
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_000.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_001.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_002.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_003.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_004.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_005.png"
+  }
+  images {
+    image: "/monsters/trolls/green_troll/images/WALK_006.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
   flip_horizontal: 0
   flip_vertical: 0
 }

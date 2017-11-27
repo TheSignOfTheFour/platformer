@@ -24,6 +24,7 @@ embedded_components {
   "group: \"hero\"\n"
   "mask: \"geometry\"\n"
   "mask: \"bestiary\"\n"
+  "mask: \"bestiary_attack_range\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

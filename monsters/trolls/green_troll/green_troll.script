@@ -1,55 +1,51 @@
 local CONTACT_POINT_RESPONSE = hash("contact_point_response")
 local COLLISION_RESPONSE = hash("collision_response")
 local BESTIARY_ATTACK_RANGE = hash("bestiary_attack_range")
+local BESTIARY_WATCH_RANGE = hash("bestiary_watch_range")
 local HERO = hash("hero")
+local GROUP_GEOMETRY = hash("geometry")
+
+-- these are the tweaks for the mechanics, feel free to change them for a different feeling
+-- the acceleration to move right/left
+local move_acceleration = 3500
+-- acceleration factor to use when air-borne
+local air_acceleration_factor = 0.8
+-- max speed right/left
+local max_speed = 40
+-- gravity pulling the player down in pixel units
+local gravity = -1100
 
 function init(self)
 	-- Add initialization code here
 	-- Remove this function if not needed
     self.direction = -1
-    self.previous_direction = nil
-
+    self.previous_direction = 0
+    -- initial player velocity
+    self.velocity = vmath.vector3(0, 0, 0)
+    -- support variable to keep track of collisions and separation
+    self.correction = vmath.vector3()
+    -- if the player stands on ground or not
+    self.ground_contact = false
+    -- movement input in the range [-1,1]
+    self.move_input = 0
+    -- the currently playing animation
+    self.anim = nil
+    self.attack = false
+    self.walk = false
 --    self.collision_object_diff = vmath.vector3((go.get("#sprite", "size.x") / 2) * 0.2, 0, 0.08);
 
 --    local pos = go.get_position()
 
-    timer.seconds(5, function(self, id)
-        self.direction = 1
-        go.set_position(go.get_position() + vmath.vector3(300, 0, 0))
-    end)
-
---    self.collision_obj = factory.create("#green_troll_collision_factory",  pos, nil, {}, 1)
+--    timer.seconds(5, function(self, id)
+--        self.direction = 1
+--        go.set_position(go.get_position() + vmath.vector3(300, 0, 0))
+--        msg.post("#sprite", "play_animation", {id = hash("idle")})
+--    end)
 end
 
 function final(self)
 	-- Add finalization code here
 	-- Remove this function if not needed
-end
-
-local function update_animations(self)
-    if self.previous_direction ~= self.direction then
-        sprite.set_hflip("#sprite", self.direction < 0)
-        if self.direction < 0 then
-            msg.post("#collisionobject_left", "disable")
-            msg.post("#collisionobject_right", "enable")
-            --            self.collision_object_diff.x = math.abs(self.collision_object_diff.x)
-        else
-            msg.post("#collisionobject_left", "enable")
-            msg.post("#collisionobject_right", "disable")
-
---            self.collision_object_diff.x = -1 * math.abs(self.collision_object_diff.x)
-        end
-        self.previous_direction = self.direction
-    end
-end
-
-function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
-
---    go.set(self.collision_obj, "position", go.get_position() + self.collision_object_diff)
-
-    update_animations(self)
 end
 
 local function play_animation(self, anim)
@@ -62,29 +58,122 @@ local function play_animation(self, anim)
     end
 end
 
-function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
-    if message_id == CONTACT_POINT_RESPONSE then
-        -- check that the object is something we consider geometry
-        if message.group == HERO then
-            play_animation(self, hash("attack"))
---            handle_geometry_contact(self, message.normal, message.distance)
-        end
---        if message.group == BESTIARY then
---            local proj = vmath.dot(self.correction, message.normal)
---            local comp = (message.distance - proj) * message.normal
---            self.correction = self.correction + comp
---            go.set_position(go.get_position(id) + comp)
---            proj = vmath.dot(self.velocity, message.normal)
---            if proj < 0 then
---                self.velocity = self.velocity - proj * message.normal
---            end
---        end
-    elseif message_id == COLLISION_RESPONSE then
-        if message.group == HERO then
-        end
+local function update_animations(self)
+    if self.attack then
+        play_animation(self, hash("attack"))
+    elseif self.walk then
+        play_animation(self, hash("walk"))
+    else
+        play_animation(self, hash("idle"))
+    end
 
+    if self.previous_direction ~= self.direction then
+        if self.direction < 0 then
+            sprite.set_hflip("#sprite", true)
+            msg.post("#collisionobject_left", "disable")
+            msg.post("#collisionobject_right", "enable")
+        else
+            sprite.set_hflip("#sprite", false)
+            msg.post("#collisionobject_left", "enable")
+            msg.post("#collisionobject_right", "disable")
+        end
+        self.previous_direction = self.direction
+    end
+end
+
+function update(self, dt)
+    -- determine the target speed based on input
+    local acceleration_diff = 1
+    local target_speed = self.move_input * max_speed
+    -- calculate the difference between our current speed and the target speed
+    local speed_diff = target_speed - self.velocity.x
+    -- the complete acceleration to integrate over this frame
+    local acceleration = vmath.vector3(0, gravity, 0)
+    if speed_diff ~= 0 then
+        -- set the acceleration to work in the direction of the difference
+        if speed_diff < 0 then
+            acceleration.x = -move_acceleration
+        else
+            acceleration.x = move_acceleration
+        end
+        -- decrease the acceleration when air-borne to give a slower feel
+        if not self.ground_contact then
+            acceleration.x = air_acceleration_factor * acceleration.x
+        end
+    end
+    -- calculate the velocity change this frame (dv is short for delta-velocity)
+    local dv = acceleration * dt
+    -- check if dv exceeds the intended speed difference, clamp it in that case
+    if math.abs(dv.x) > math.abs(speed_diff) then
+        -- if math.abs(dv.x) > math.abs(ggg) then
+        dv.x = speed_diff
+    end
+    -- save the current velocity for later use
+    -- (self.velocity, which right now is the velocity used the previous frame)
+    local v0 = self.velocity
+    -- calculate the new velocity by adding the velocity change
+    self.velocity = self.velocity + dv
+    -- calculate the translation this frame by integrating the velocity
+    local dp = (v0 + self.velocity) * dt * 0.5
+    dp.x = dp.x * acceleration_diff
+    -- apply it to the player character
+
+    go.set_position(go.get_position() + dp)
+
+    update_animations(self)
+
+    -- reset volatile state
+    self.correction = vmath.vector3()
+    self.move_input = 0
+    self.ground_contact = false
+    self.attack = false
+    self.walk = false
+
+end
+
+local function handle_geometry_contact(self, normal, distance)
+    -- project the correction vector onto the contact normal
+    -- (the correction vector is the 0-vector for the first contact point)
+    local proj = vmath.dot(self.correction, normal)
+    -- calculate the compensation we need to make for this contact point
+    local comp = (distance - proj) * normal
+    -- add it to the correction vector
+    self.correction = self.correction + comp
+    -- apply the compensation to the player character
+    go.set_position(go.get_position() + comp)
+    -- check if the normal points enough up to consider the player standing on the ground
+    -- (0.7 is roughly equal to 45 degrees deviation from pure vertical direction)
+    if normal.y > 0.7 then
+        --		msg.post(self.weapon, "jump", {start = false})
+        self.ground_contact = true
+    end
+    -- project the velocity onto the normal
+    proj = vmath.dot(self.velocity, normal)
+    -- if the projection is negative, it means that some of the velocity points towards the contact point
+    if proj < 0 then
+        -- remove that component in that case
+        self.velocity = self.velocity - proj * normal
+    end
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == CONTACT_POINT_RESPONSE then
+        if message.group == GROUP_GEOMETRY then
+            handle_geometry_contact(self, message.normal, message.distance)
+        elseif message.own_group == BESTIARY_ATTACK_RANGE then
+            self.move_input = 0
+            self.attack = true
+        elseif message.own_group == BESTIARY_WATCH_RANGE and not self.attack then
+            local own_pos = go.get_position(msg.url())
+            if own_pos.x > message.other_position.x then
+                self.direction = -1
+                self.move_input = -1
+            else
+                self.direction = 1
+                self.move_input = 1
+            end
+            self.walk = true
+        end
     end
 end
 

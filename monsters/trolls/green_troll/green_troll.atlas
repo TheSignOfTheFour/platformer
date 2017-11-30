@@ -50,7 +50,7 @@ animations {
     image: "/monsters/trolls/green_troll/images/ATTAK_006.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 15
+  fps: 6
   flip_horizontal: 0
   flip_vertical: 0
 }
@@ -78,7 +78,7 @@ animations {
     image: "/monsters/trolls/green_troll/images/WALK_006.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
+  fps: 6
   flip_horizontal: 0
   flip_vertical: 0
 }

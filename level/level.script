@@ -12,7 +12,7 @@ function init(self)
 
 	factory.create("#weaponlevelfactory", vmath.vector3(100, 100, 0), rotation, props, scale)
 
-	factory.create("#green_troll_factory", vmath.vector3(600, 150, 0), nil, {}, scale)
+	factory.create("#green_troll_factory", vmath.vector3(600, 250, 0), nil, {}, scale)
 
 	-- Add initialization code here
 	-- Remove this function if not needed

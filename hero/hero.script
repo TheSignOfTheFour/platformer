@@ -47,11 +47,11 @@ function init(self)
 	local rotation = vmath.quat_rotation_z(math.pi / 0.5)
 	local scale = 1
 	local props = {
---		hero_weapon = true,
---		diff_position = vmath.vector3((go.get("#sprite", "size.x") / 2) * 0.7, go.get("#sprite", "size.y") / 2, 0),
 		diff_position = vmath.vector3((go.get("#sprite", "size.x") / 2) * 0.7, go.get("#sprite", "size.y") / 2, 0.09),
 		weapon_id = hash("sword2")
 	}
+	self.weapon = factory.create("#weaponfactory", go.get_position(), rotation, props, scale)
+
 	-- to ignore inut keys on time acceleration animation
 	self.acceleration_animation = false
 	-- to ignore inut keys on time doublejump animation
@@ -60,7 +60,6 @@ function init(self)
 	self.first_fall_animation = false
 	self.double_jump_animation = false
 
-	self.weapon = factory.create("#weaponfactory", go.get_position(), rotation, props, scale)
 -- 	fire_sx = go.get("#sprite_fire", "size.x")
 
 	-- initial player velocity
@@ -106,7 +105,15 @@ end
 local function update_animations(self)
 	-- make sure the player character faces the right way
 	if self.previous_direction ~= self.direction then
-		sprite.set_hflip("#sprite", self.direction < 0)
+		if self.direction < 0 then
+			sprite.set_hflip("#sprite", true)
+			msg.post("#collisionobject_left", "enable")
+			msg.post("#collisionobject_right", "disable")
+		else
+			sprite.set_hflip("#sprite", false)
+			msg.post("#collisionobject_left", "disable")
+			msg.post("#collisionobject_right", "enable")
+		end
 		msg.post(self.weapon, "change_direction", {new_direction = self.direction})
 		self.previous_direction = self.direction
 	end
